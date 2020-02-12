@@ -50,7 +50,7 @@ with logFile as file:
 for key in iplist:
     if iplist.get(key) > 3:
        command = ("ufw deny from {}").format(key)
-       os.system(command)
+       print(command)
 
     
 

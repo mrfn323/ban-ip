@@ -13,6 +13,8 @@ def ipInsert(ip):
 
 
 #Open log file. Path to log file here (may add copy to program directory later)
+os.system("cp /var/log/auth.log ~/ban-ip")
+os.system("ufw status | grep DENY >> denyrules")
 logFile = open("auth.log", "r")
 count = 0
 

@@ -47,8 +47,8 @@ with logFile as file:
 
 for key in iplist:
     if iplist.get(key) > 3:
-       command = ("sudo ufw deny from {}").format(key)
-       print(command)
+       command = ("ufw deny from {}").format(key)
+       os.system(command)
 
     
 

@@ -1,5 +1,19 @@
+#Imports
+import os
+
+#global
+iplist = {}
+
+#Function
+def ipInsert(ip):
+    if iplist.has_key(ip):
+        iplist[ip] += 1
+    else:
+        iplist[ip] = 1
+
 logFile = open("auth.log", "r")
 count = 0
+
 
 with logFile as file:
     lines = file.readlines()
@@ -10,14 +24,23 @@ with logFile as file:
         #Failed Key
         if words[5] == "Received" and words[6] == "disconnect":
             print("{}: Key Authentication Fail IP ADDRESS: " + words[8]).format(count)
+            ip = words[8]
+            ipInsert(ip)           
 
         #Failed Password logic
         elif words[5] == "Failed" and words[6] == "password":
             #failed password with invalid user
             if words[8] == "invalid":
                 print("{}: Failed password for Invalid user USER: " + words[10] + " IP ADDRESS: " + words[12]).format(count)
+                ip = words[12]
+                ipInsert(ip)
             #just failed password
             else:
                 print("{}: Password failed for " + "USER: " + words[8] + " IP ADDRESS: " + words[10]).format(count)
+                ip = words[10]
+                ipInsert(ip)
             
         count += 1
+print(iplist)
+
+

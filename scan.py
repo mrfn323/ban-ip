@@ -1,23 +1,26 @@
 #Imports
 import os
 
-#global
+#global variable needed
 iplist = {}
 
-#Function
+#Functions needed
 def ipInsert(ip):
     if iplist.has_key(ip):
         iplist[ip] += 1
     else:
         iplist[ip] = 1
 
+
+#Open log file. Path to log file here (may add copy to program directory later)
 logFile = open("auth.log", "r")
 count = 0
 
-
+#Run through each line in the log file
 with logFile as file:
     lines = file.readlines()
 
+    #Spliting each line to a word list
     for line in lines:
         words = line.split()
 

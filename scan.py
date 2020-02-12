@@ -44,6 +44,11 @@ with logFile as file:
                 ipInsert(ip)
             
         count += 1
-print(iplist)
 
+for key in iplist:
+    if iplist.get(key) > 3:
+       command = ("sudo ufw deny from {}").format(key)
+       print(command)
+
+    
 

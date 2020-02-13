@@ -2,21 +2,34 @@
 import os
 
 #global variable needed
-iplist = {}
+iplist = {}                                             #Holds ip address seen in the log files and counts how many times it appears
+existingIPs = []                                        #Takes ufw rules ip address to be compared to later. 
 
 #Functions needed
 def ipInsert(ip):
-    if iplist.has_key(ip):
-        iplist[ip] += 1
-    else:
-        iplist[ip] = 1
+    if ip in existingIPs != True:
+        if iplist.has_key(ip):
+            iplist[ip] += 1
+        else:
+            iplist[ip] = 1
 
+#commands being done on the machine to get and create necessary files.
+os.system("cp /var/log/auth.log ~/ban-ip")             #Copies Auth.log file to get ips that needs to be banned
+os.system("ufw status | grep DENY >> denyrules")       #Copies ufw status to a file that scan ips that have already been banned
 
-#Open log file. Path to log file here (may add copy to program directory later)
-os.system("cp /var/log/auth.log ~/ban-ip")
-os.system("ufw status | grep DENY >> denyrules")
-logFile = open("auth.log", "r")
+#Opens files. Needed for the program
+logFile = open("auth.log", "r")                         #Opens auth.log file that was copied from the system location
+existingIP = open("denyrules", "r")                     #Opens ufw rules file
 count = 0
+
+#Populate existingIPs array
+with existingIP as ipFile:
+    lines = ipFile.readlines()
+    print(lines)
+
+    for line in lines:
+        words = line.split()
+        existingIPs.append(words[2])
 
 #Run through each line in the log file
 with logFile as file:
@@ -51,6 +64,8 @@ for key in iplist:
     if iplist.get(key) > 3:
        command = ("ufw deny from {}").format(key)
        print(command)
+
+os.system("rm denyrules")
 
     
 

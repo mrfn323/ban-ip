@@ -1,5 +1,6 @@
 #Imports
 import os
+import datetime
 
 #global variable needed
 iplist = {}                                             #Holds ip address seen in the log files and counts how many times it appears
@@ -16,6 +17,7 @@ def ipInsert(ip):
 #commands being done on the machine to get and create necessary files.
 os.system("cp /var/log/auth.log ~/ban-ip")             #Copies Auth.log file to get ips that needs to be banned
 os.system("ufw status | grep DENY >> denyrules")       #Copies ufw status to a file that scan ips that have already been banned
+os.system("touch ban-ip.log")                          #Creates file for logging of the program activities
 
 #Opens files. Needed for the program
 logFile = open("auth.log", "r")                         #Opens auth.log file that was copied from the system location
@@ -25,7 +27,6 @@ count = 0
 #Populate existingIPs array
 with existingIP as ipFile:
     lines = ipFile.readlines()
-    print(lines)
 
     for line in lines:
         words = line.split()
@@ -60,11 +61,23 @@ with logFile as file:
             
         count += 1
 
+now = datetime.datetime.now()
+log = open("ban-ip.log", "a")
+headerMSG = ("\n\n-----IPs BANNED ON THE DATE AND TIME OF {}-----\n").format(now)
+log.write(headerMSG)
+
 for key in iplist:
     if iplist.get(key) > 3:
        command = ("ufw deny from {}").format(key)
        print(command)
+       ipLog = ("{} \n").format(key)
+       log.write(ipLog)
 
+footerMSG = ("-----END OF LOG FOR TIME {}-----").format(now)
+log.write(footerMSG)
+
+logFile.close()
+existingIP.close()
 os.system("rm denyrules")
 os.system("rm auth.log")
 

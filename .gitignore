@@ -152,4 +152,5 @@ auth.log
 
 .vscode/*
 denyrules
+ban-ip.log
 

@@ -66,6 +66,7 @@ for key in iplist:
        print(command)
 
 os.system("rm denyrules")
+os.system("rm auth.log")
 
     
 

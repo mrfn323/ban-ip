@@ -78,6 +78,7 @@ log.write(footerMSG)
 
 logFile.close()
 existingIP.close()
+log.close()
 os.system("rm denyrules")
 os.system("rm auth.log")
 
